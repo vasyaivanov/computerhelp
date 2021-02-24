@@ -1,6 +1,6 @@
 document.getElementById('open-screensharing-room').onclick = function() {
     disableInputButtonsScreenShare();
-    connection.open(document.getElementById('room-id').value, function() {
+    connectionScreenShare.open(document.getElementById('room-id').value, function() {
         // showRoomURL(connection.sessionid);
     });
 };
@@ -39,7 +39,7 @@ document.getElementById('open-screensharing-room').onclick = function() {
 var connectionScreenShare = new RTCMultiConnection();
 
 // by default, socket.io server is assumed to be deployed on your own URL
-connection.socketURL = '/';
+connectionScreenShare.socketURL = '/';
 
 // comment-out below line if you do not have your own socket.io server
 // connectionScreenShare.socketURL = 'https://rtcmulticonnection.herokuapp.com:443/';
@@ -107,7 +107,7 @@ connectionScreenShare.onstream = function(event) {
         showOnMouseEnter: false
     });
 
-    connection.videosContainer.appendChild(mediaElement);
+    connectionScreenShare.videosContainer.appendChild(mediaElement);
 
     setTimeout(function() {
         mediaElement.media.play();
@@ -121,14 +121,14 @@ connectionScreenShare.onstreamended = function(event) {
     if (mediaElement) {
         mediaElement.parentNode.removeChild(mediaElement);
 
-        if(event.userid === connection.sessionid && !connectionScreenShare.isInitiator) {
+        if(event.userid === connectionScreenShare.sessionid && !connectionScreenShare.isInitiator) {
           alert('Broadcast is ended. We will reload this page to clear the cache.');
           location.reload();
         }
     }
 };
 
-connection.onMediaError = function(e) {
+connectionScreenShare.onMediaError = function(e) {
     if (e.message === 'Concurrent mic process limit.') {
         if (DetectRTC.audioInputDevices.length <= 1) {
             alert('Please select external microphone. Check github issue number 483.');
@@ -140,7 +140,7 @@ connection.onMediaError = function(e) {
             deviceId: secondaryMic
         };
 
-        connection.join(connectionScreenShare.sessionid);
+        connectionScreenShare.join(connectionScreenShare.sessionid);
     }
 };
 
@@ -191,10 +191,10 @@ function showRoomURL(roomid) {
 })();
 
 var roomid = '';
-if (localStorage.getItem(connection.socketMessageEvent)) {
+if (localStorage.getItem(connectionScreenShare.socketMessageEvent)) {
     roomid = localStorage.getItem(connectionScreenShare.socketMessageEvent);
 } else {
-    roomid = connection.token();
+    roomid = connectionScreenShare.token();
 }
 document.getElementById('room-id').value = roomid;
 document.getElementById('room-id').onkeyup = function() {
@@ -213,13 +213,13 @@ if (!roomid && hashString.length) {
 
 if (roomid && roomid.length) {
     document.getElementById('room-id').value = roomid;
-    localStorage.setItem(connection.socketMessageEvent, roomid);
+    localStorage.setItem(connectionScreenShare.socketMessageEvent, roomid);
 
     // auto-join-room
     (function reCheckRoomPresence() {
         connectionScreenShare.checkPresence(roomid, function(isRoomExist) {
             if (isRoomExist) {
-                connection.join(roomid);
+                connectionScreenShare.join(roomid);
                 return;
             }
 
