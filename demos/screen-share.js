@@ -1,12 +1,12 @@
 document.getElementById('open-screensharing-room').onclick = function() {
-    disableInputButtons();
+    disableInputButtonsScreenShare();
     connection.open(document.getElementById('room-id').value, function() {
         // showRoomURL(connection.sessionid);
     });
 };
 
 // document.getElementById('join-room').onclick = function() {
-//     disableInputButtons();
+//     disableInputButtonsScreenShare();
 
 //     connection.sdpConstraints.mandatory = {
 //         OfferToReceiveAudio: false,
@@ -16,7 +16,7 @@ document.getElementById('open-screensharing-room').onclick = function() {
 // };
 
 // document.getElementById('open-or-join-room').onclick = function() {
-//     disableInputButtons();
+//     disableInputButtonsScreenShare();
 //     connection.openOrJoin(document.getElementById('room-id').value, function(isRoomExist, roomid) {
 //         if (isRoomExist === false && connection.isInitiator === true) {
 //             // if room doesn't exist, it means that current user will create the room
@@ -148,7 +148,7 @@ connection.onMediaError = function(e) {
 // ALL below scripts are redundant!!!
 // ..................................
 
-function disableInputButtons() {
+function disableInputButtonsScreenShare() {
     document.getElementById('room-id').onkeyup();
 
     // document.getElementById('open-or-join-room').disabled = true;
@@ -227,7 +227,7 @@ if (roomid && roomid.length) {
         });
     })();
 
-    disableInputButtons();
+    disableInputButtonsScreenShare();
 }
 
 // detect 2G
