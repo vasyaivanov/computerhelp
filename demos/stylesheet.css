@@ -71,7 +71,7 @@ header {
 }
 
 section, header {
-    border-bottom: 1px solid #95d4e7;
+    /*border-bottom: 1px solid #95d4e7;*/
 }
 
 section, header, footer {

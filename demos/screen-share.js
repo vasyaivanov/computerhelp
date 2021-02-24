@@ -1,133 +1,64 @@
-<!DOCTYPE html>
-<html lang="en" dir="ltr">
-<head>
-  <meta charset="utf-8">
-  <title>Screen Sharing using RTCMultiConnection</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
-  <link rel="shortcut icon" href="/demos/logo.png">
-  <link rel="stylesheet" href="/demos/stylesheet.css">
-  <script src="/demos/menu.js"></script>
-</head>
-<body>
-  <header>
-    <a class="logo" href="/"><img src="/demos/logo.png" alt="RTCMultiConnection"></a>
-    <a href="/" class="menu-explorer">Menu<img src="/demos/menu-icon.png" alt="Menu"></a>
-    <nav>
-      <li>
-        <a href="/">Home</a>
-      </li>
-      <li>
-        <a href="/demos/">Demos</a>
-      </li>
-      <li>
-        <a href="https://www.rtcmulticonnection.org/docs/getting-started/">Getting Started</a>
-      </li>
-      <li>
-        <a href="https://www.rtcmulticonnection.org/FAQ/">FAQ</a>
-      </li>
-      <li>
-        <a href="https://www.youtube.com/playlist?list=PLPRQUXAnRydKdyun-vjKPMrySoow2N4tl">YouTube</a>
-      </li>
-      <li>
-        <a href="https://github.com/muaz-khan/RTCMultiConnection/wiki">Wiki</a>
-      </li>
-      <li>
-        <a href="https://github.com/muaz-khan/RTCMultiConnection">Github</a>
-      </li>
-    </nav>
-  </header>
-
-  <h1>
-    Screen Sharing using RTCMultiConnection
-    <p class="no-mobile">
-      Multi-user (one-to-many) screen sharing using star topology.
-    </p>
-  </h1>
-
-  <section class="make-center">
-    <input type="text" id="room-id" value="abcdef" autocorrect=off autocapitalize=off size=20>
-    <button id="open-room">Open Room</button>
-    <button id="join-room">Join Room</button>
-    <button id="open-or-join-room">Auto Open Or J
-      oin Room</button>
-
-    <div id="videos-container" style="margin: 20px 0;"></div>
-
-    <div id="room-urls" style="text-align: center;display: none;background: #F1EDED;margin: 15px -10px;border: 1px solid rgb(189, 189, 189);border-left: 0;border-right: 0;"></div>
-  </section>
-
-<script src="/dist/RTCMultiConnection.js"></script>
-<script src="/node_modules/webrtc-adapter/out/adapter.js"></script>
-<script src="/socket.io/socket.io.js"></script>
-
-<!-- custom layout for HTML5 audio/video elements -->
-<link rel="stylesheet" href="/dev/getHTMLMediaElement.css">
-<script src="/dev/getHTMLMediaElement.js"></script>
-<script>
-// ......................................................
-// .......................UI Code........................
-// ......................................................
-document.getElementById('open-room').onclick = function() {
+document.getElementById('open-screensharing-room').onclick = function() {
     disableInputButtons();
     connection.open(document.getElementById('room-id').value, function() {
-        showRoomURL(connection.sessionid);
+        // showRoomURL(connection.sessionid);
     });
 };
 
-document.getElementById('join-room').onclick = function() {
-    disableInputButtons();
+// document.getElementById('join-room').onclick = function() {
+//     disableInputButtons();
 
-    connection.sdpConstraints.mandatory = {
-        OfferToReceiveAudio: false,
-        OfferToReceiveVideo: true
-    };
-    connection.join(document.getElementById('room-id').value);
-};
+//     connection.sdpConstraints.mandatory = {
+//         OfferToReceiveAudio: false,
+//         OfferToReceiveVideo: true
+//     };
+//     connection.join(document.getElementById('room-id').value);
+// };
 
-document.getElementById('open-or-join-room').onclick = function() {
-    disableInputButtons();
-    connection.openOrJoin(document.getElementById('room-id').value, function(isRoomExist, roomid) {
-        if (isRoomExist === false && connection.isInitiator === true) {
-            // if room doesn't exist, it means that current user will create the room
-            showRoomURL(roomid);
-        }
+// document.getElementById('open-or-join-room').onclick = function() {
+//     disableInputButtons();
+//     connection.openOrJoin(document.getElementById('room-id').value, function(isRoomExist, roomid) {
+//         if (isRoomExist === false && connection.isInitiator === true) {
+//             // if room doesn't exist, it means that current user will create the room
+//             showRoomURL(roomid);
+//         }
 
-        if(isRoomExist) {
-          connection.sdpConstraints.mandatory = {
-              OfferToReceiveAudio: false,
-              OfferToReceiveVideo: true
-          };
-        }
-    });
-};
+//         if(isRoomExist) {
+//           connection.sdpConstraints.mandatory = {
+//               OfferToReceiveAudio: false,
+//               OfferToReceiveVideo: true
+//           };
+//         }
+//     });
+// };
 
 // ......................................................
 // ..................RTCMultiConnection Code.............
 // ......................................................
 
-var connection = new RTCMultiConnection();
+var connectionScreenShare = new RTCMultiConnection();
 
 // by default, socket.io server is assumed to be deployed on your own URL
 connection.socketURL = '/';
 
 // comment-out below line if you do not have your own socket.io server
-// connection.socketURL = 'https://rtcmulticonnection.herokuapp.com:443/';
+// connectionScreenShare.socketURL = 'https://rtcmulticonnection.herokuapp.com:443/';
 
-connection.socketMessageEvent = 'screen-sharing-demo';
+connectionScreenShare.socketMessageEvent = 'screen-sharing-demo';
 
-connection.session = {
+connectionScreenShare.session = {
     screen: true,
     oneway: true
 };
 
-connection.sdpConstraints.mandatory = {
+connectionScreenShare.sdpConstraints.mandatory = {
     OfferToReceiveAudio: false,
     OfferToReceiveVideo: false
 };
 
 // https://www.rtcmulticonnection.org/docs/iceServers/
 // use your own TURN-server here!
-connection.iceServers = [{
+connectionScreenShare.iceServers = [{
     'urls': [
         'stun:stun.l.google.com:19302',
         'stun:stun1.l.google.com:19302',
@@ -136,8 +67,8 @@ connection.iceServers = [{
     ]
 }];
 
-connection.videosContainer = document.getElementById('videos-container');
-connection.onstream = function(event) {
+connectionScreenShare.videosContainer = document.getElementById('videos-container');
+connectionScreenShare.onstream = function(event) {
     var existing = document.getElementById(event.streamid);
     if(existing && existing.parentNode) {
       existing.parentNode.removeChild(existing);
@@ -185,12 +116,12 @@ connection.onstream = function(event) {
     mediaElement.id = event.streamid;
 };
 
-connection.onstreamended = function(event) {
+connectionScreenShare.onstreamended = function(event) {
     var mediaElement = document.getElementById(event.streamid);
     if (mediaElement) {
         mediaElement.parentNode.removeChild(mediaElement);
 
-        if(event.userid === connection.sessionid && !connection.isInitiator) {
+        if(event.userid === connection.sessionid && !connectionScreenShare.isInitiator) {
           alert('Broadcast is ended. We will reload this page to clear the cache.');
           location.reload();
         }
@@ -205,11 +136,11 @@ connection.onMediaError = function(e) {
         }
 
         var secondaryMic = DetectRTC.audioInputDevices[1].deviceId;
-        connection.mediaConstraints.audio = {
+        connectionScreenShare.mediaConstraints.audio = {
             deviceId: secondaryMic
         };
 
-        connection.join(connection.sessionid);
+        connection.join(connectionScreenShare.sessionid);
     }
 };
 
@@ -220,10 +151,10 @@ connection.onMediaError = function(e) {
 function disableInputButtons() {
     document.getElementById('room-id').onkeyup();
 
-    document.getElementById('open-or-join-room').disabled = true;
-    document.getElementById('open-room').disabled = true;
-    document.getElementById('join-room').disabled = true;
-    document.getElementById('room-id').disabled = true;
+    // document.getElementById('open-or-join-room').disabled = true;
+    document.getElementById('open-screensharing-room').disabled = true;
+    // document.getElementById('join-room').disabled = true;
+    // document.getElementById('room-id').disabled = true;
 }
 
 // ......................................................
@@ -261,13 +192,13 @@ function showRoomURL(roomid) {
 
 var roomid = '';
 if (localStorage.getItem(connection.socketMessageEvent)) {
-    roomid = localStorage.getItem(connection.socketMessageEvent);
+    roomid = localStorage.getItem(connectionScreenShare.socketMessageEvent);
 } else {
     roomid = connection.token();
 }
 document.getElementById('room-id').value = roomid;
 document.getElementById('room-id').onkeyup = function() {
-    localStorage.setItem(connection.socketMessageEvent, document.getElementById('room-id').value);
+    localStorage.setItem(connectionScreenShare.socketMessageEvent, document.getElementById('room-id').value);
 };
 
 var hashString = location.hash.replace('#', '');
@@ -286,7 +217,7 @@ if (roomid && roomid.length) {
 
     // auto-join-room
     (function reCheckRoomPresence() {
-        connection.checkPresence(roomid, function(isRoomExist) {
+        connectionScreenShare.checkPresence(roomid, function(isRoomExist) {
             if (isRoomExist) {
                 connection.join(roomid);
                 return;
@@ -305,12 +236,3 @@ if(navigator.connection &&
    navigator.connection.downlinkMax <= 0.115) {
   alert('2G is not supported. Please use a better internet service.');
 }
-</script>
-
-  <footer>
-    <small id="send-message"></small>
-  </footer>
-
-  <script src="https://www.webrtc-experiment.com/common.js"></script>
-</body>
-</html>

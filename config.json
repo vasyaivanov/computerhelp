@@ -1,7 +1,7 @@
 {
   "socketURL": "/",
   "dirPath": "",
-  "homePage": "/demos/index.html",
+  "homePage": "/demos/audio-conferencing.html",
   "socketMessageEvent": "RTCMultiConnection-Message",
   "socketCustomEvent": "RTCMultiConnection-Custom-Message",
   "port": "9001",
