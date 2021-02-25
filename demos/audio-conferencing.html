@@ -62,7 +62,7 @@
   </section>
 
 
-<script src="/dist/RTCMultiConnection.min.js"></script>
+<script src="/dist/RTCMultiConnection.js"></script>
 <script src="/node_modules/webrtc-adapter/out/adapter.js"></script>
 <script src="/socket.io/socket.io.js"></script>
 
@@ -96,6 +96,8 @@ document.getElementById('open-room').onclick = function() {
 // ......................................................
 // ..................RTCMultiConnection Code.............
 // ......................................................
+
+console.log("JD: in RTCMultiConnection code");
 
 var connection = new RTCMultiConnection();
 
