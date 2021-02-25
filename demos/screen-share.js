@@ -4,6 +4,7 @@
 
 
 document.getElementById('open-screensharing-room').onclick = function() {
+    console.log("JD: in document.getElementById('open-screensharing-room').onclick");
     disableInputButtonsScreenShare();
     connection.open(document.getElementById('room-id').value, function() {
         // showRoomURL(connection.sessionid);
@@ -74,6 +75,7 @@ connectionScreenShare.iceServers = [{
 
 connectionScreenShare.videosContainer = document.getElementById('videos-container');
 connectionScreenShare.onstream = function(event) {
+    console.log("JD: in connectionScreenShare.onstream");
     var existing = document.getElementById(event.streamid);
     if(existing && existing.parentNode) {
       existing.parentNode.removeChild(existing);
