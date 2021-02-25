@@ -1,6 +1,11 @@
+// ......................................................
+// ......................JD: SCREEN SHARE code................
+// ......................................................
+
+
 document.getElementById('open-screensharing-room').onclick = function() {
     disableInputButtonsScreenShare();
-    connectionScreenShare.open(document.getElementById('room-id').value, function() {
+    connection.open(document.getElementById('room-id').value, function() {
         // showRoomURL(connection.sessionid);
     });
 };
@@ -39,7 +44,7 @@ document.getElementById('open-screensharing-room').onclick = function() {
 var connectionScreenShare = new RTCMultiConnection();
 
 // by default, socket.io server is assumed to be deployed on your own URL
-connectionScreenShare.socketURL = '/';
+connection.socketURL = '/';
 
 // comment-out below line if you do not have your own socket.io server
 // connectionScreenShare.socketURL = 'https://rtcmulticonnection.herokuapp.com:443/';
@@ -107,7 +112,7 @@ connectionScreenShare.onstream = function(event) {
         showOnMouseEnter: false
     });
 
-    connectionScreenShare.videosContainer.appendChild(mediaElement);
+    connection.videosContainer.appendChild(mediaElement);
 
     setTimeout(function() {
         mediaElement.media.play();
@@ -121,14 +126,14 @@ connectionScreenShare.onstreamended = function(event) {
     if (mediaElement) {
         mediaElement.parentNode.removeChild(mediaElement);
 
-        if(event.userid === connectionScreenShare.sessionid && !connectionScreenShare.isInitiator) {
+        if(event.userid === connection.sessionid && !connectionScreenShare.isInitiator) {
           alert('Broadcast is ended. We will reload this page to clear the cache.');
           location.reload();
         }
     }
 };
 
-connectionScreenShare.onMediaError = function(e) {
+connection.onMediaError = function(e) {
     if (e.message === 'Concurrent mic process limit.') {
         if (DetectRTC.audioInputDevices.length <= 1) {
             alert('Please select external microphone. Check github issue number 483.');
@@ -140,7 +145,7 @@ connectionScreenShare.onMediaError = function(e) {
             deviceId: secondaryMic
         };
 
-        connectionScreenShare.join(connectionScreenShare.sessionid);
+        connection.join(connectionScreenShare.sessionid);
     }
 };
 
@@ -191,10 +196,10 @@ function showRoomURL(roomid) {
 })();
 
 var roomid = '';
-if (localStorage.getItem(connectionScreenShare.socketMessageEvent)) {
+if (localStorage.getItem(connection.socketMessageEvent)) {
     roomid = localStorage.getItem(connectionScreenShare.socketMessageEvent);
 } else {
-    roomid = connectionScreenShare.token();
+    roomid = connection.token();
 }
 document.getElementById('room-id').value = roomid;
 document.getElementById('room-id').onkeyup = function() {
@@ -213,13 +218,13 @@ if (!roomid && hashString.length) {
 
 if (roomid && roomid.length) {
     document.getElementById('room-id').value = roomid;
-    localStorage.setItem(connectionScreenShare.socketMessageEvent, roomid);
+    localStorage.setItem(connection.socketMessageEvent, roomid);
 
     // auto-join-room
     (function reCheckRoomPresence() {
         connectionScreenShare.checkPresence(roomid, function(isRoomExist) {
             if (isRoomExist) {
-                connectionScreenShare.join(roomid);
+                connection.join(roomid);
                 return;
             }
 
@@ -236,3 +241,5 @@ if(navigator.connection &&
    navigator.connection.downlinkMax <= 0.115) {
   alert('2G is not supported. Please use a better internet service.');
 }
+
+
