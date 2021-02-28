@@ -319,7 +319,7 @@ function showRoomURL(roomid) {
 
 //--- AUDIO roomid ---//
 var roomid = '';
-console.log("JD: localStorage.getItem(connection.socketMessageEvent)="+localStorage.getItem(connection.socketMessageEvent));
+console.log("JD: AUDIO localStorage.getItem(connection.socketMessageEvent)="+localStorage.getItem(connection.socketMessageEvent));
 if (localStorage.getItem(connection.socketMessageEvent)) {
     roomid = localStorage.getItem(connection.socketMessageEvent);
 } else {
@@ -345,7 +345,7 @@ console.log("JD: after hash roomid="+roomid);
 
 // --- SCREENSHARE roomid ---
 var roomidScreenShare = '';
-console.log("JD: localStorage.getItem(connectionScreenShare.socketMessageEvent)="+localStorage.getItem(connectionScreenShare.socketMessageEvent));
+console.log("JD: SCREENSHARE localStorage.getItem(connectionScreenShare.socketMessageEvent)="+localStorage.getItem(connectionScreenShare.socketMessageEvent));
 if (localStorage.getItem(connectionScreenShare.socketMessageEvent)) {
     roomidScreenShare = localStorage.getItem(connectionScreenShare.socketMessageEvent);
 } else {
@@ -377,6 +377,7 @@ console.log("JD: after hash roomidScreenShare="+roomidScreenShare);
 // ----- AUDIO ROOMID HANDLING ---
 
 if (roomid && roomid.length) {
+    console.log("JD: in AUDIO roomid handling");
     document.getElementById('room-id').value = roomid;
     localStorage.setItem(connection.socketMessageEvent, roomid);
 
@@ -392,7 +393,31 @@ if (roomid && roomid.length) {
         });
     })();
 
-    disableInputButtons();
+    //disableInputButtons();
+}
+
+//---- END AUDIO ROOMID HANDLING ----//
+
+// ----- SCREENSHARE ROOMID HANDLING ---
+
+if (roomidScreenShare && roomidScreenShare.length) {
+    console.log("JD: in SCREENSHARE roomid handling");
+    document.getElementById('room-id').value = roomidScreenShare;
+    localStorage.setItem(connectionScreenShare.socketMessageEvent, roomidScreenShare);
+
+    // auto-join-room
+    (function reCheckRoomPresence() {
+        connectionScreenShare.checkPresence(roomidScreenShare, function(isRoomExist) {
+            if (isRoomExist) {
+                connectionScreenShare.join(roomidScreenShare);
+                return;
+            }
+
+            setTimeout(reCheckRoomPresence, 5000);
+        });
+    })();
+
+    //disableInputButtons();
 }
 
 //---- END AUDIO ROOMID HANDLING ----//
