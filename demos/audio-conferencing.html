@@ -88,7 +88,7 @@ document.getElementById('open-room').onclick = function() {
 document.getElementById('open-screensharing-room').onclick = function() {
     console.log("JD: in document.getElementById('open-screensharing-room').onclick");
     screenShareConferenceStarted = true;
-    disableInputButtonsScreenShare();
+    // disableInputButtonsScreenShare();
     connectionScreenShare.open(document.getElementById('room-id').value, function() {
         // showRoomURL(connection.sessionid);
     });
