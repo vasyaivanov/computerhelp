@@ -68,216 +68,31 @@
 
 <link rel="stylesheet" href="/dev/getHTMLMediaElement.css">
 <script src="/dev/getHTMLMediaElement.js"></script>
+
+
 <script>
 // ......................................................
 // .......................UI Code........................
 // ......................................................
-// document.getElementById('open-room').onclick = function() {
-//     disableInputButtons();
-//     connection.open(document.getElementById('room-id').value, function() {
-//         // showRoomURL(connection.sessionid);
-//     });
-// };
+var audioConferenceStarted = false;
+var screenShareConferenceStarted = false;
 
-// // document.getElementById('join-room').onclick = function() {
-// //     disableInputButtons();
-// //     connection.join(document.getElementById('room-id').value);
-// // };
-
-// // document.getElementById('open-or-join-room').onclick = function() {
-// //     disableInputButtons();
-// //     connection.openOrJoin(document.getElementById('room-id').value, function(isRoomExist, roomid) {
-// //         if (!isRoomExist) {
-// //             showRoomURL(roomid);
-// //         }
-// //     });
-// // };
-
-// // ......................................................
-// // ..................RTCMultiConnection Code.............
-// // ......................................................
-
-// console.log("JD: in RTCMultiConnection code");
-
-// var connection = new RTCMultiConnection();
-
-// // by default, socket.io server is assumed to be deployed on your own URL
-// connection.socketURL = '/';
-
-// // comment-out below line if you do not have your own socket.io server
-// // connection.socketURL = 'https://rtcmulticonnection.herokuapp.com:443/';
-
-// connection.socketMessageEvent = 'audio-conference-demo';
-
-// connection.session = {
-//     audio: true,
-//     video: false
-// };
-
-// connection.mediaConstraints = {
-//     audio: true,
-//     video: false
-// };
-
-// connection.sdpConstraints.mandatory = {
-//     OfferToReceiveAudio: true,
-//     OfferToReceiveVideo: false
-// };
-
-// // https://www.rtcmulticonnection.org/docs/iceServers/
-// // use your own TURN-server here!
-// connection.iceServers = [{
-//     'urls': [
-//         'stun:stun.l.google.com:19302',
-//         'stun:stun1.l.google.com:19302',
-//         'stun:stun2.l.google.com:19302',
-//         'stun:stun.l.google.com:19302?transport=udp',
-//     ]
-// }];
-
-// connection.audiosContainer = document.getElementById('audios-container');
-// connection.onstream = function(event) {
-//     var width = parseInt(connection.audiosContainer.clientWidth / 2) - 20;
-//     var mediaElement = getHTMLMediaElement(event.mediaElement, {
-//         title: event.userid,
-//         buttons: ['full-screen'],
-//         width: width,
-//         showOnMouseEnter: false
-//     });
-
-//     connection.audiosContainer.appendChild(mediaElement);
-
-//     setTimeout(function() {
-//         mediaElement.media.play();
-//     }, 5000);
-
-//     mediaElement.id = event.streamid;
-// };
-
-// connection.onstreamended = function(event) {
-//     var mediaElement = document.getElementById(event.streamid);
-//     if (mediaElement) {
-//         mediaElement.parentNode.removeChild(mediaElement);
-//     }
-// };
-
-// function disableInputButtons() {
-//     // document.getElementById('open-or-join-room').disabled = true;
-//     document.getElementById('open-room').disabled = true;
-//     // document.getElementById('join-room').disabled = true;
-//     // document.getElementById('room-id').disabled = true;
-// }
-
-// // ......................................................
-// // ......................Handling Room-ID................
-// // ......................................................
-
-// function showRoomURL(roomid) {
-//     var roomHashURL = '#' + roomid;
-//     var roomQueryStringURL = '?roomid=' + roomid;
-
-//     var html = '<h2>Unique URL for your room:</h2><br>';
-
-//     html += 'Hash URL: <a href="' + roomHashURL + '" target="_blank">' + roomHashURL + '</a>';
-//     html += '<br>';
-//     html += 'QueryString URL: <a href="' + roomQueryStringURL + '" target="_blank">' + roomQueryStringURL + '</a>';
-
-//     var roomURLsDiv = document.getElementById('room-urls');
-//     roomURLsDiv.innerHTML = html;
-
-//     roomURLsDiv.style.display = 'block';
-// }
-
-// (function() {
-//     var params = {},
-//         r = /([^&=]+)=?([^&]*)/g;
-
-//     function d(s) {
-//         return decodeURIComponent(s.replace(/\+/g, ' '));
-//     }
-//     var match, search = window.location.search;
-//     while (match = r.exec(search.substring(1)))
-//         params[d(match[1])] = d(match[2]);
-//     window.params = params;
-// })();
-
-
-
-
-
-
-
-// var roomid = '';
-// if (localStorage.getItem(connection.socketMessageEvent)) {
-//     roomid = localStorage.getItem(connection.socketMessageEvent);
-// } else {
-//     roomid = connection.token();
-// }
-// document.getElementById('room-id').value = roomid;
-// document.getElementById('room-id').onkeyup = function() {
-//     localStorage.setItem(connection.socketMessageEvent, this.value);
-// };
-
-// var hashString = location.hash.replace('#', '');
-// if (hashString.length && hashString.indexOf('comment-') == 0) {
-//     hashString = '';
-// }
-
-// var roomid = params.roomid;
-// if (!roomid && hashString.length) {
-//     roomid = hashString;
-// }
-
-// if (roomid && roomid.length) {
-//     document.getElementById('room-id').value = roomid;
-//     localStorage.setItem(connection.socketMessageEvent, roomid);
-
-//     // auto-join-room
-//     (function reCheckRoomPresence() {
-//         connection.checkPresence(roomid, function(isRoomExist) {
-//             if (isRoomExist) {
-//                 connection.join(roomid);
-//                 return;
-//             }
-
-//             setTimeout(reCheckRoomPresence, 5000);
-//         });
-//     })();
-
-//     disableInputButtons();
-// }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// --- BELOW IS SCREENSHARE CODE ---//
-
-// ......................................................
-// .......................UI Code........................
-// ......................................................
-document.getElementById('open-screensharing-room').onclick = function() {
+document.getElementById('open-room').onclick = function() {
+    console.log("JD: in document.getElementById('open-room').onclick");
+    audioConferenceStarted = true;
     disableInputButtons();
     connection.open(document.getElementById('room-id').value, function() {
         showRoomURL(connection.sessionid);
     });
 };
-
+document.getElementById('open-screensharing-room').onclick = function() {
+    console.log("JD: in document.getElementById('open-screensharing-room').onclick");
+    screenShareConferenceStarted = true;
+    disableInputButtonsScreenShare();
+    connectionScreenShare.open(document.getElementById('room-id').value, function() {
+        // showRoomURL(connection.sessionid);
+    });
+};
 
 // ......................................................
 // ..................RTCMultiConnection Code.............
@@ -291,15 +106,20 @@ connection.socketURL = '/';
 // comment-out below line if you do not have your own socket.io server
 // connection.socketURL = 'https://rtcmulticonnection.herokuapp.com:443/';
 
-connection.socketMessageEvent = 'screen-sharing-demo';
+connection.socketMessageEvent = 'audio-conference-demo';
 
 connection.session = {
-    screen: true,
-    oneway: true
+    audio: true,
+    video: false
+};
+
+connection.mediaConstraints = {
+    audio: true,
+    video: false
 };
 
 connection.sdpConstraints.mandatory = {
-    OfferToReceiveAudio: false,
+    OfferToReceiveAudio: true,
     OfferToReceiveVideo: false
 };
 
@@ -314,8 +134,73 @@ connection.iceServers = [{
     ]
 }];
 
-connection.videosContainer = document.getElementById('videos-container');
+connection.audiosContainer = document.getElementById('audios-container');
 connection.onstream = function(event) {
+    var width = parseInt(connection.audiosContainer.clientWidth / 2) - 20;
+    var mediaElement = getHTMLMediaElement(event.mediaElement, {
+        title: event.userid,
+        buttons: ['full-screen'],
+        width: width,
+        showOnMouseEnter: false
+    });
+
+    connection.audiosContainer.appendChild(mediaElement);
+
+    setTimeout(function() {
+        mediaElement.media.play();
+    }, 5000);
+
+    mediaElement.id = event.streamid;
+};
+
+connection.onstreamended = function(event) {
+    var mediaElement = document.getElementById(event.streamid);
+    if (mediaElement) {
+        mediaElement.parentNode.removeChild(mediaElement);
+    }
+};
+
+function disableInputButtons() {
+}
+
+
+
+
+
+// --- SCREENSHARE CONNECTION CODE ---//
+var connectionScreenShare = new RTCMultiConnection();
+
+// by default, socket.io server is assumed to be deployed on your own URL
+connectionScreenShare.socketURL = '/';
+
+// comment-out below line if you do not have your own socket.io server
+// connectionScreenShare.socketURL = 'https://rtcmulticonnectionScreenShare.herokuapp.com:443/';
+
+connectionScreenShare.socketMessageEvent = 'screen-sharing-demo';
+
+connectionScreenShare.session = {
+    screen: true,
+    oneway: true
+};
+
+connectionScreenShare.sdpConstraints.mandatory = {
+    OfferToReceiveAudio: false,
+    OfferToReceiveVideo: false
+};
+
+// https://www.rtcmulticonnectionScreenShare.org/docs/iceServers/
+// use your own TURN-server here!
+connectionScreenShare.iceServers = [{
+    'urls': [
+        'stun:stun.l.google.com:19302',
+        'stun:stun1.l.google.com:19302',
+        'stun:stun2.l.google.com:19302',
+        'stun:stun.l.google.com:19302?transport=udp',
+    ]
+}];
+
+connectionScreenShare.videosContainer = document.getElementById('videos-container');
+connectionScreenShare.onstream = function(event) {
     var existing = document.getElementById(event.streamid);
     if(existing && existing.parentNode) {
       existing.parentNode.removeChild(existing);
@@ -354,7 +239,7 @@ connection.onstream = function(event) {
         showOnMouseEnter: false
     });
 
-    connection.videosContainer.appendChild(mediaElement);
+    connectionScreenShare.videosContainer.appendChild(mediaElement);
 
     setTimeout(function() {
         mediaElement.media.play();
@@ -363,19 +248,19 @@ connection.onstream = function(event) {
     mediaElement.id = event.streamid;
 };
 
-connection.onstreamended = function(event) {
+connectionScreenShare.onstreamended = function(event) {
     var mediaElement = document.getElementById(event.streamid);
     if (mediaElement) {
         mediaElement.parentNode.removeChild(mediaElement);
 
-        if(event.userid === connection.sessionid && !connection.isInitiator) {
+        if(event.userid === connectionScreenShare.sessionid && !connectionScreenShare.isInitiator) {
           alert('Broadcast is ended. We will reload this page to clear the cache.');
           location.reload();
         }
     }
 };
 
-connection.onMediaError = function(e) {
+connectionScreenShare.onMediaError = function(e) {
     if (e.message === 'Concurrent mic process limit.') {
         if (DetectRTC.audioInputDevices.length <= 1) {
             alert('Please select external microphone. Check github issue number 483.');
@@ -383,26 +268,21 @@ connection.onMediaError = function(e) {
         }
 
         var secondaryMic = DetectRTC.audioInputDevices[1].deviceId;
-        connection.mediaConstraints.audio = {
+        connectionScreenShare.mediaConstraints.audio = {
             deviceId: secondaryMic
         };
 
-        connection.join(connection.sessionid);
+        connectionScreenShare.join(connectionScreenShare.sessionid);
     }
 };
 
-// ..................................
-// ALL below scripts are redundant!!!
-// ..................................
+// ---- END SCREENSHARE CONNECTION --- //
 
-function disableInputButtons() {
-    // document.getElementById('room-id').onkeyup();
 
-    // document.getElementById('open-or-join-room').disabled = true;
-    // document.getElementById('open-room').disabled = true;
-    // document.getElementById('join-room').disabled = true;
-    // document.getElementById('room-id').disabled = true;
-}
+
+
+
+
 
 // ......................................................
 // ......................Handling Room-ID................
@@ -437,7 +317,9 @@ function showRoomURL(roomid) {
     window.params = params;
 })();
 
+//--- AUDIO roomid ---//
 var roomid = '';
+console.log("JD: localStorage.getItem(connection.socketMessageEvent)="+localStorage.getItem(connection.socketMessageEvent));
 if (localStorage.getItem(connection.socketMessageEvent)) {
     roomid = localStorage.getItem(connection.socketMessageEvent);
 } else {
@@ -445,8 +327,9 @@ if (localStorage.getItem(connection.socketMessageEvent)) {
 }
 document.getElementById('room-id').value = roomid;
 document.getElementById('room-id').onkeyup = function() {
-    localStorage.setItem(connection.socketMessageEvent, document.getElementById('room-id').value);
+    localStorage.setItem(connection.socketMessageEvent, this.value);
 };
+console.log("JD: before hash roomid="+roomid);
 
 var hashString = location.hash.replace('#', '');
 if (hashString.length && hashString.indexOf('comment-') == 0) {
@@ -457,6 +340,41 @@ var roomid = params.roomid;
 if (!roomid && hashString.length) {
     roomid = hashString;
 }
+console.log("JD: after hash roomid="+roomid);
+// --- end AUDIO roomid ---
+
+// --- SCREENSHARE roomid ---
+var roomidScreenShare = '';
+console.log("JD: localStorage.getItem(connectionScreenShare.socketMessageEvent)="+localStorage.getItem(connectionScreenShare.socketMessageEvent));
+if (localStorage.getItem(connectionScreenShare.socketMessageEvent)) {
+    roomidScreenShare = localStorage.getItem(connectionScreenShare.socketMessageEvent);
+} else {
+    roomidScreenShare = connectionScreenShare.token();
+}
+document.getElementById('room-id').value = roomidScreenShare;
+document.getElementById('room-id').onkeyup = function() {
+    localStorage.setItem(connectionScreenShare.socketMessageEvent, this.value);
+};
+console.log("JD: before hash roomidScreenShare="+roomidScreenShare);
+
+var hashStringScreenShare = location.hash.replace('#', '');
+if (hashStringScreenShare.length && hashStringScreenShare.indexOf('comment-') == 0) {
+    hashStringScreenShare = '';
+}
+
+var roomidScreenShare = params.roomidScreenShare;
+if (!roomidScreenShare && hashStringScreenShare.length) {
+    roomidScreenShare = hashStringScreenShare;
+}
+console.log("JD: after hash roomidScreenShare="+roomidScreenShare);
+
+// --- end SCREENSHARE rooomid ---
+
+
+
+
+
+// ----- AUDIO ROOMID HANDLING ---
 
 if (roomid && roomid.length) {
     document.getElementById('room-id').value = roomid;
@@ -476,6 +394,27 @@ if (roomid && roomid.length) {
 
     disableInputButtons();
 }
+
+//---- END AUDIO ROOMID HANDLING ----//
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
