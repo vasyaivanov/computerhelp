@@ -48,43 +48,50 @@
 
   <section class="make-center">
     <input type="text" id="room-id" value="abcdef" autocorrect=off autocapitalize=off size=20>
-    <button id="open-room">Open Room</button>
+    <button id="open-room">Open Audio Room</button>
+    <button id="open-screensharing-room">Open Screen Sharing Room</button>
+<!--
     <button id="join-room">Join Room</button>
     <button id="open-or-join-room">Auto Open Or Join Room</button>
-
+  -->
     <div id="room-urls" style="text-align: center;display: none;background: #F1EDED;margin: 15px -10px;border: 1px solid rgb(189, 189, 189);border-left: 0;border-right: 0;"></div>
 
     <div id="audios-container"></div>
+    <div id="videos-container" style="margin: 20px 0;"></div>
+
   </section>
 
-<script src="/dist/RTCMultiConnection.min.js"></script>
+
+
+<script src="/dist/RTCMultiConnection.js"></script>
 <script src="/node_modules/webrtc-adapter/out/adapter.js"></script>
 <script src="/socket.io/socket.io.js"></script>
 
 <link rel="stylesheet" href="/dev/getHTMLMediaElement.css">
 <script src="/dev/getHTMLMediaElement.js"></script>
+
+
 <script>
 // ......................................................
 // .......................UI Code........................
 // ......................................................
+var audioConferenceStarted = false;
+var screenShareConferenceStarted = false;
+
 document.getElementById('open-room').onclick = function() {
+    console.log("JD: in document.getElementById('open-room').onclick");
+    audioConferenceStarted = true;
     disableInputButtons();
     connection.open(document.getElementById('room-id').value, function() {
         showRoomURL(connection.sessionid);
     });
 };
-
-document.getElementById('join-room').onclick = function() {
-    disableInputButtons();
-    connection.join(document.getElementById('room-id').value);
-};
-
-document.getElementById('open-or-join-room').onclick = function() {
-    disableInputButtons();
-    connection.openOrJoin(document.getElementById('room-id').value, function(isRoomExist, roomid) {
-        if (!isRoomExist) {
-            showRoomURL(roomid);
-        }
+document.getElementById('open-screensharing-room').onclick = function() {
+    console.log("JD: in document.getElementById('open-screensharing-room').onclick");
+    screenShareConferenceStarted = true;
+    // disableInputButtonsScreenShare();
+    connectionScreenShare.open(document.getElementById('room-id').value, function() {
+        // showRoomURL(connection.sessionid);
     });
 };
 
@@ -155,11 +162,128 @@ connection.onstreamended = function(event) {
 };
 
 function disableInputButtons() {
-    document.getElementById('open-or-join-room').disabled = true;
-    document.getElementById('open-room').disabled = true;
-    document.getElementById('join-room').disabled = true;
-    document.getElementById('room-id').disabled = true;
 }
+
+
+
+
+
+// --- SCREENSHARE CONNECTION CODE ---//
+var connectionScreenShare = new RTCMultiConnection();
+
+// by default, socket.io server is assumed to be deployed on your own URL
+connectionScreenShare.socketURL = '/';
+
+// comment-out below line if you do not have your own socket.io server
+// connectionScreenShare.socketURL = 'https://rtcmulticonnectionScreenShare.herokuapp.com:443/';
+
+connectionScreenShare.socketMessageEvent = 'screen-sharing-demo';
+
+connectionScreenShare.session = {
+    screen: true,
+    oneway: true
+};
+
+connectionScreenShare.sdpConstraints.mandatory = {
+    OfferToReceiveAudio: false,
+    OfferToReceiveVideo: false
+};
+
+// https://www.rtcmulticonnectionScreenShare.org/docs/iceServers/
+// use your own TURN-server here!
+connectionScreenShare.iceServers = [{
+    'urls': [
+        'stun:stun.l.google.com:19302',
+        'stun:stun1.l.google.com:19302',
+        'stun:stun2.l.google.com:19302',
+        'stun:stun.l.google.com:19302?transport=udp',
+    ]
+}];
+
+connectionScreenShare.videosContainer = document.getElementById('videos-container');
+connectionScreenShare.onstream = function(event) {
+    var existing = document.getElementById(event.streamid);
+    if(existing && existing.parentNode) {
+      existing.parentNode.removeChild(existing);
+    }
+
+    event.mediaElement.removeAttribute('src');
+    event.mediaElement.removeAttribute('srcObject');
+    event.mediaElement.muted = true;
+    event.mediaElement.volume = 0;
+
+    var video = document.createElement('video');
+
+    try {
+        video.setAttributeNode(document.createAttribute('autoplay'));
+        video.setAttributeNode(document.createAttribute('playsinline'));
+    } catch (e) {
+        video.setAttribute('autoplay', true);
+        video.setAttribute('playsinline', true);
+    }
+
+    if(event.type === 'local') {
+      video.volume = 0;
+      try {
+          video.setAttributeNode(document.createAttribute('muted'));
+      } catch (e) {
+          video.setAttribute('muted', true);
+      }
+    }
+    video.srcObject = event.stream;
+
+    var width = innerWidth - 80;
+    var mediaElement = getHTMLMediaElement(video, {
+        title: event.userid,
+        buttons: ['full-screen'],
+        width: width,
+        showOnMouseEnter: false
+    });
+
+    connectionScreenShare.videosContainer.appendChild(mediaElement);
+
+    setTimeout(function() {
+        mediaElement.media.play();
+    }, 5000);
+
+    mediaElement.id = event.streamid;
+};
+
+connectionScreenShare.onstreamended = function(event) {
+    var mediaElement = document.getElementById(event.streamid);
+    if (mediaElement) {
+        mediaElement.parentNode.removeChild(mediaElement);
+
+        if(event.userid === connectionScreenShare.sessionid && !connectionScreenShare.isInitiator) {
+          alert('Broadcast is ended. We will reload this page to clear the cache.');
+          location.reload();
+        }
+    }
+};
+
+connectionScreenShare.onMediaError = function(e) {
+    if (e.message === 'Concurrent mic process limit.') {
+        if (DetectRTC.audioInputDevices.length <= 1) {
+            alert('Please select external microphone. Check github issue number 483.');
+            return;
+        }
+
+        var secondaryMic = DetectRTC.audioInputDevices[1].deviceId;
+        connectionScreenShare.mediaConstraints.audio = {
+            deviceId: secondaryMic
+        };
+
+        connectionScreenShare.join(connectionScreenShare.sessionid);
+    }
+};
+
+// ---- END SCREENSHARE CONNECTION --- //
+
+
+
+
+
+
 
 // ......................................................
 // ......................Handling Room-ID................
@@ -194,7 +318,9 @@ function showRoomURL(roomid) {
     window.params = params;
 })();
 
+//--- AUDIO roomid ---//
 var roomid = '';
+console.log("JD: AUDIO localStorage.getItem(connection.socketMessageEvent)="+localStorage.getItem(connection.socketMessageEvent));
 if (localStorage.getItem(connection.socketMessageEvent)) {
     roomid = localStorage.getItem(connection.socketMessageEvent);
 } else {
@@ -204,6 +330,7 @@ document.getElementById('room-id').value = roomid;
 document.getElementById('room-id').onkeyup = function() {
     localStorage.setItem(connection.socketMessageEvent, this.value);
 };
+console.log("JD: before hash roomid="+roomid);
 
 var hashString = location.hash.replace('#', '');
 if (hashString.length && hashString.indexOf('comment-') == 0) {
@@ -214,8 +341,44 @@ var roomid = params.roomid;
 if (!roomid && hashString.length) {
     roomid = hashString;
 }
+console.log("JD: after hash roomid="+roomid);
+// --- end AUDIO roomid ---
+
+// --- SCREENSHARE roomid ---
+var roomidScreenShare = '';
+console.log("JD: SCREENSHARE localStorage.getItem(connectionScreenShare.socketMessageEvent)="+localStorage.getItem(connectionScreenShare.socketMessageEvent));
+if (localStorage.getItem(connectionScreenShare.socketMessageEvent)) {
+    roomidScreenShare = localStorage.getItem(connectionScreenShare.socketMessageEvent);
+} else {
+    roomidScreenShare = connectionScreenShare.token();
+}
+document.getElementById('room-id').value = roomidScreenShare;
+document.getElementById('room-id').onkeyup = function() {
+    localStorage.setItem(connectionScreenShare.socketMessageEvent, this.value);
+};
+console.log("JD: before hash roomidScreenShare="+roomidScreenShare);
+
+var hashStringScreenShare = location.hash.replace('#', '');
+if (hashStringScreenShare.length && hashStringScreenShare.indexOf('comment-') == 0) {
+    hashStringScreenShare = '';
+}
+
+var roomidScreenShare = params.roomid;
+if (!roomidScreenShare && hashStringScreenShare.length) {
+    roomidScreenShare = hashStringScreenShare;
+}
+console.log("JD: after hash roomidScreenShare="+roomidScreenShare);
+
+// --- end SCREENSHARE rooomid ---
+
+
+
+
+
+// ----- AUDIO ROOMID HANDLING ---
 
 if (roomid && roomid.length) {
+    console.log("JD: in AUDIO roomid handling");
     document.getElementById('room-id').value = roomid;
     localStorage.setItem(connection.socketMessageEvent, roomid);
 
@@ -231,9 +394,61 @@ if (roomid && roomid.length) {
         });
     })();
 
-    disableInputButtons();
+    //disableInputButtons();
 }
+
+//---- END AUDIO ROOMID HANDLING ----//
+
+// ----- SCREENSHARE ROOMID HANDLING ---
+console.log("JD: roomidScreenShare="+roomidScreenShare);
+
+if (roomidScreenShare && roomidScreenShare.length) {
+    console.log("JD: in SCREENSHARE roomid handling");
+    document.getElementById('room-id').value = roomidScreenShare;
+    localStorage.setItem(connectionScreenShare.socketMessageEvent, roomidScreenShare);
+
+    // auto-join-room
+    (function reCheckRoomPresence() {
+        connectionScreenShare.checkPresence(roomidScreenShare, function(isRoomExist) {
+            if (isRoomExist) {
+                connectionScreenShare.join(roomidScreenShare);
+                return;
+            }
+
+            setTimeout(reCheckRoomPresence, 5000);
+        });
+    })();
+
+    //disableInputButtons();
+}
+
+//---- END AUDIO ROOMID HANDLING ----//
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 </script>
+
+
+
 
   <section class="make-center">
     <iframe src="/demos/screen-sharing.html" title="ScreenSharingiFrame" style="width:100%;height:300px">
