@@ -56,7 +56,7 @@
   -->
     <div id="room-urls" style="text-align: center;display: none;background: #F1EDED;margin: 15px -10px;border: 1px solid rgb(189, 189, 189);border-left: 0;border-right: 0;"></div>
 
-    <div id="audios-container" style="visibility:hidden"></div>
+    <div id="audios-container"></div>
     <div id="videos-container" style="margin: 20px 0;"></div>
 
   </section>
@@ -79,7 +79,7 @@ var audioConferenceStarted = false;
 var screenShareConferenceStarted = false;
 
 document.getElementById('open-room').onclick = function() {
-    console.log("JD: in document.getElementById('open-room').onclick");
+    console.log("JD: AUDIO AAAAA in document.getElementById('open-room').onclick="+document.getElementById('room-id').value);
     audioConferenceStarted = true;
     disableInputButtons();
     connection.open(document.getElementById('room-id').value, function() {
@@ -320,9 +320,6 @@ function showRoomURL(roomid) {
 
 
 
-
-
-
 //--- AUDIO roomid ---//
 var localStorageId = "computersharingid";
 var localStorageUniqueIdentified = "-audio";
@@ -438,11 +435,20 @@ if (roomidScreenShare && roomidScreenShare.length) {
 
 
 
+connection.getSocket( function(socket){
+  console.log("JD: AUDIO3 AAAAAA connection.socket="+socket.id);
+  document.getElementById('room-id').value = socket.id + localStorageUniqueIdentified;
+  localStorage.setItem(localStorageId, socket.id);
+  console.log("JD: AUDIO3 AAAAAA localStorageId="+localStorageId+ " value=" +localStorage.getItem(localStorageId));
+
+  document.getElementById('open-room').click();
+
+});
 
 
 
 
-document.getElementById('open-room').click();
+
 
 
 

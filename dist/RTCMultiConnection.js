@@ -123,6 +123,7 @@ var RTCMultiConnection = function(roomid, forceOptions) {
     })(typeof global !== 'undefined' ? global : null);
 
     function SocketConnection(connection, connectCallback) {
+        console.log("JD: connection.userid in RTCMultiConnnection="+connection.userid);
         function isData(session) {
             return !session.audio && !session.video && !session.screen && session.data;
         }
@@ -399,6 +400,7 @@ var RTCMultiConnection = function(roomid, forceOptions) {
         });
 
         connection.socket.on('user-connected', function(userid) {
+            console.log("JD: socket.on user-connected userid="+userid);
             if (userid === connection.userid) {
                 return;
             }
@@ -5509,6 +5511,11 @@ var RTCMultiConnection = function(roomid, forceOptions) {
             }
 
             return connection.socket; // callback is preferred over return-statement
+        };
+
+        connection.getSocketImmediately = function() {
+            console.log("JD: in getSocketImmediately");
+            return connection.socket;
         };
 
         connection.getRemoteStreams = mPeer.getRemoteStreams;
