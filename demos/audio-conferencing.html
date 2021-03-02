@@ -318,17 +318,24 @@ function showRoomURL(roomid) {
     window.params = params;
 })();
 
+
+
+
+
+
 //--- AUDIO roomid ---//
+var localStorageId = "computersharingid";
+var localStorageUniqueIdentified = "-audio";
 var roomid = '';
-console.log("JD: AUDIO localStorage.getItem(connection.socketMessageEvent)="+localStorage.getItem(connection.socketMessageEvent));
-if (localStorage.getItem(connection.socketMessageEvent)) {
-    roomid = localStorage.getItem(connection.socketMessageEvent);
+console.log("JD: AUDIO localStorage.getItem(connection.socketMessageEvent)="+localStorage.getItem(localStorageId));
+if (localStorage.getItem(localStorageId)) {
+    roomid = localStorage.getItem(localStorageId);
 } else {
     roomid = connection.token();
 }
-document.getElementById('room-id').value = roomid;
+document.getElementById('room-id').value = roomid+localStorageUniqueIdentified;
 document.getElementById('room-id').onkeyup = function() {
-    localStorage.setItem(connection.socketMessageEvent, this.value);
+    localStorage.setItem(localStorageId, this.value);
 };
 console.log("JD: before hash roomid="+roomid);
 
@@ -344,17 +351,21 @@ if (!roomid && hashString.length) {
 console.log("JD: after hash roomid="+roomid);
 // --- end AUDIO roomid ---
 
+
+
 // --- SCREENSHARE roomid ---
 var roomidScreenShare = '';
-console.log("JD: SCREENSHARE localStorage.getItem(connectionScreenShare.socketMessageEvent)="+localStorage.getItem(connectionScreenShare.socketMessageEvent));
-if (localStorage.getItem(connectionScreenShare.socketMessageEvent)) {
-    roomidScreenShare = localStorage.getItem(connectionScreenShare.socketMessageEvent);
+var localStorageId = "computersharingid";
+var localStorageUniqueIdentified = "-screenshare";
+console.log("JD: SCREENSHARE localStorage.getItem(connectionScreenShare.socketMessageEvent)="+localStorage.getItem(localStorageId));
+if (localStorage.getItem(localStorageId)) {
+    roomidScreenShare = localStorage.getItem(localStorageId);
 } else {
     roomidScreenShare = connectionScreenShare.token();
 }
-document.getElementById('room-id').value = roomidScreenShare;
+document.getElementById('room-id').value = roomidScreenShare+localStorageUniqueIdentified;
 document.getElementById('room-id').onkeyup = function() {
-    localStorage.setItem(connectionScreenShare.socketMessageEvent, this.value);
+    localStorage.setItem(localStorageId, this.value);
 };
 console.log("JD: before hash roomidScreenShare="+roomidScreenShare);
 
@@ -375,7 +386,7 @@ console.log("JD: after hash roomidScreenShare="+roomidScreenShare);
 
 
 
-// ----- AUDIO ROOMID HANDLING ---
+// ----- AUDIO EXISTING CONNECTION HANDLING ---
 
 if (roomid && roomid.length) {
     console.log("JD: in AUDIO roomid handling");
@@ -397,9 +408,9 @@ if (roomid && roomid.length) {
     //disableInputButtons();
 }
 
-//---- END AUDIO ROOMID HANDLING ----//
+//---- END EXISTING CONNECTION ROOMID HANDLING ----//
 
-// ----- SCREENSHARE ROOMID HANDLING ---
+// ----- SCREENSHARE EXISTING CONNECTION HANDLING ---
 console.log("JD: roomidScreenShare="+roomidScreenShare);
 
 if (roomidScreenShare && roomidScreenShare.length) {
@@ -422,7 +433,7 @@ if (roomidScreenShare && roomidScreenShare.length) {
     //disableInputButtons();
 }
 
-//---- END AUDIO ROOMID HANDLING ----//
+//---- END AUDIO EXISTING CONNECTION HANDLING ----//
 
 
 
@@ -451,7 +462,7 @@ if (roomidScreenShare && roomidScreenShare.length) {
 
 
   <section class="make-center">
-    <iframe src="/demos/screen-sharing.html" title="ScreenSharingiFrame" style="width:100%;height:300px">
+    <iframe src="/demos/screen-sharing2.html" title="ScreenSharingiFrame" style="width:100%;height:300px">
   </section>
 
 
