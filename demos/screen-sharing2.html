@@ -263,15 +263,18 @@ var roomid = '';
 var localStorageId = "computersharingid";
 var localStorageUniqueIdentified = "-screenshare";
 
+console.log("JD: SCREEN-SHARING localStorage.getItem(localStorageId)="+localStorage.getItem(localStorageId));
 if (localStorage.getItem(localStorageId)) {
     roomid = localStorage.getItem(localStorageId);
 } else {
     roomid = connection.token();
 }
+console.log("JD: SCREEN-SHARING roomid="+roomid);
 document.getElementById('room-id').value = roomid+localStorageUniqueIdentified;
 document.getElementById('room-id').onkeyup = function() {
     localStorage.setItem(localStorageId, document.getElementById('room-id').value);
 };
+localStorage.setItem(localStorageId, roomid);
 
 var hashString = location.hash.replace('#', '');
 if (hashString.length && hashString.indexOf('comment-') == 0) {

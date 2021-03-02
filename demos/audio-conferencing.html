@@ -327,7 +327,7 @@ function showRoomURL(roomid) {
 var localStorageId = "computersharingid";
 var localStorageUniqueIdentified = "-audio";
 var roomid = '';
-console.log("JD: AUDIO localStorage.getItem(connection.socketMessageEvent)="+localStorage.getItem(localStorageId));
+console.log("JD: AUDIO localStorage.getItem(localStorageId)="+localStorage.getItem(localStorageId));
 if (localStorage.getItem(localStorageId)) {
     roomid = localStorage.getItem(localStorageId);
 } else {
@@ -337,6 +337,7 @@ document.getElementById('room-id').value = roomid+localStorageUniqueIdentified;
 document.getElementById('room-id').onkeyup = function() {
     localStorage.setItem(localStorageId, this.value);
 };
+localStorage.setItem(localStorageId, roomid);
 console.log("JD: before hash roomid="+roomid);
 
 var hashString = location.hash.replace('#', '');
