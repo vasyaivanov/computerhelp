@@ -180,7 +180,9 @@ function updateListOfRooms(rooms) {
         var tr = document.createElement('tr');
         var html = '';
         html += '<td>' + (idx + 1) + '</td>';
-        html += '<td><span class="max-width" title="' + roomid + '">' + roomid + '</span></td>';
+        html += '<td><span class="max-width" title="' + roomid + '">' 
+            + '<a href="' + window.location.protocol + '//' + window.location.hostname 
+            + '/demos/audio-conferencing.html?roomid=' + roomid + '">' + roomid + '</a></span></td>';
         html += '<td><span class="max-width" title="' + room.owner + '">' + room.owner + '</span></td>';
         html += '<td><span class="max-width" title="' + room.identifier + '">' + (room.identifier || 'None') + '</span></td>';
         html += '<td><span class="max-width" title="' + room.socketMessageEvent + '">' + room.socketMessageEvent + '</span></td>';
