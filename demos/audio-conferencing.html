@@ -46,7 +46,7 @@
   </h1>
 -->
 
-  <section class="make-center">
+  <section class="make-center" style='visibility:hidden'>
     <input type="text" id="room-id" value="abcdef" autocorrect=off autocapitalize=off size=20>
     <button id="open-room">Open Audio Room</button>
     <button id="open-screensharing-room">Open Screen Sharing Room</button>
@@ -56,7 +56,7 @@
   -->
     <div id="room-urls" style="text-align: center;display: none;background: #F1EDED;margin: 15px -10px;border: 1px solid rgb(189, 189, 189);border-left: 0;border-right: 0;"></div>
 
-    <div id="audios-container"></div>
+    <div id="audios-container" style="visibility:hidden"></div>
     <div id="videos-container" style="margin: 20px 0;"></div>
 
   </section>
@@ -442,7 +442,7 @@ if (roomidScreenShare && roomidScreenShare.length) {
 
 
 
-
+document.getElementById('open-room').click();
 
 
 
@@ -463,7 +463,7 @@ if (roomidScreenShare && roomidScreenShare.length) {
 
 
   <section class="make-center">
-    <iframe src="/demos/screen-sharing2.html" title="ScreenSharingiFrame" style="width:100%;height:300px">
+    <iframe src="/demos/screen-sharing2.html" title="ScreenSharingiFrame" style="width:100%;height:300px;border-width: 0px;position:absolute;top:0px">
   </section>
 
 

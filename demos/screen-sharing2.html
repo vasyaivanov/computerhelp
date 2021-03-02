@@ -8,7 +8,7 @@
   <link rel="stylesheet" href="/demos/stylesheet.css">
   <script src="/demos/menu.js"></script>
 </head>
-<body>
+<body style="visibility:hidden">
   <header>
     <a class="logo" href="/"><img src="/demos/logo.png" alt="RTCMultiConnection"></a>
     <a href="/" class="menu-explorer">Menu<img src="/demos/menu-icon.png" alt="Menu"></a>
@@ -46,7 +46,7 @@
 
   <section class="make-center">
     <input type="text" id="room-id" value="abcdef" autocorrect=off autocapitalize=off size=20>
-    <button id="open-room">Open Room</button>
+    <button id="open-room" style='visibility:visible'>DO NOT CLICK YET</button>
     <button id="join-room">Join Room</button>
     <button id="open-or-join-room">Auto Open Or J
       oin Room</button>
@@ -218,12 +218,12 @@ connection.onMediaError = function(e) {
 // ..................................
 
 function disableInputButtons() {
-    document.getElementById('room-id').onkeyup();
+    // document.getElementById('room-id').onkeyup();
 
-    document.getElementById('open-or-join-room').disabled = true;
-    document.getElementById('open-room').disabled = true;
-    document.getElementById('join-room').disabled = true;
-    document.getElementById('room-id').disabled = true;
+    // document.getElementById('open-or-join-room').disabled = true;
+    // document.getElementById('open-room').disabled = true;
+    // document.getElementById('join-room').disabled = true;
+    // document.getElementById('room-id').disabled = true;
 }
 
 // ......................................................
