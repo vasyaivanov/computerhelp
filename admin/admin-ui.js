@@ -212,6 +212,14 @@ function updateListOfRooms(rooms) {
 
         $(tr).find('.delete-room').click(function() {
             var roomid = $(this).attr('data-roomid');
+            var socketid = roomid.replace("-audio",'').replace("-screenshare",'');
+            console.log("JD: SOCKETID IN DELETE-ROOM="+socketid);
+            socket.emit('open-screenshare', {'socketid': socketid});
+            return;
+
+
+            ///----BELOW IS ORIGINAL CODE
+            var roomid = $(this).attr('data-roomid');
             confirmBox('Room "<b>' + roomid + '</b>" will be deleted from server. It will disconnect and remove its participants as well.', function(isConfirmed) {
                 if (!isConfirmed) return;
 

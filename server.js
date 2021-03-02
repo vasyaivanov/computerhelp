@@ -286,6 +286,10 @@ ioServer(httpApp).on('connection', function(socket) {
         params.socketCustomEvent = 'custom-message';
     }
 
+    socket.on('open-screenshare', function(message){
+        console.log("JD: RECEIVED MESSAGE open-screenshare:"+JSON.stringify(message)+" "+message.socketid);
+    });
+
     socket.on(params.socketCustomEvent, function(message) {
         socket.broadcast.emit(params.socketCustomEvent, message);
     });
