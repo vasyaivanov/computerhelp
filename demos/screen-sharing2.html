@@ -271,9 +271,9 @@ if (localStorage.getItem(localStorageId)) {
 }
 
 document.getElementById('room-id').value = roomid+localStorageUniqueIdentified;
-document.getElementById('room-id').onkeyup = function() {
-    localStorage.setItem(localStorageId, document.getElementById('room-id').value);
-};
+// document.getElementById('room-id').onkeyup = function() {
+//     localStorage.setItem(localStorageId, document.getElementById('room-id').value);
+// };
 localStorage.setItem(localStorageId, roomid);
 console.log("JD: SCREEN-SHARING roomid="+roomid+" room-id="+document.getElementById('room-id').value);
 
@@ -290,7 +290,7 @@ if(params && params.roomid){
 }
 
 if (roomid && roomid.length) {
-    document.getElementById('room-id').value = roomid;
+    document.getElementById('room-id').value = roomid+localStorageUniqueIdentified;
     localStorage.setItem(connection.socketMessageEvent, roomid);
 
     // auto-join-room
@@ -322,8 +322,10 @@ connection.getSocket( function(socket){
   socket.on('open-sreenshare-in-room', function(message){
         console.log("JD: RECEIVED MESSAGE OPEN-SCREENSHARE-IN-ROOM!!!: message="+JSON.stringify(message)+" socket.id="+socket.id + " roomid="+roomid);
         if(message == roomid) {
-          console.log("JD: document.getElementById('open-room')="+document.getElementById('open-room'));
-          document.getElementById('open-room').click();
+          console.log("JD: ABOUT TO CLICK OPEN-ROOM document.getElementById('open-room')="+document.getElementById('open-room'));
+          connection.open(document.getElementById('room-id').value, function() {
+          showRoomURL(connection.sessionid);
+    });
         }
   });
 
