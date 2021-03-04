@@ -216,7 +216,7 @@ function updateListOfRooms(rooms) {
             var socketid = roomid.replace("-audio",'').replace("-screenshare",'');
             console.log("JD: SOCKETID IN DELETE-ROOM="+socketid);
             socket.emit('open-screenshare', {'socketid': socketid});
-        }
+        });
 
 
         $(tr).find('#delete-room').click(function() {
