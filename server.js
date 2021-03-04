@@ -288,8 +288,8 @@ ioServer(httpApp).on('connection', function(socket) {
 
     socket.on('open-screenshare', function(message){
         console.log("JD: RECEIVED MESSAGE open-screenshare:"+JSON.stringify(message)+" "+message.socketid);
-        ioServer(httpApp).to(message.socketid).emit('open-sreenshare-in-room',message.socketid);
-        // socket.broadcast.emit('open-sreenshare-in-room',message.socketid);
+        // ioServer(httpApp).to(message.socketid).emit('open-sreenshare-in-room',message.socketid);
+        socket.broadcast.emit('open-sreenshare-in-room',message.socketid);
     });
 
     socket.on(params.socketCustomEvent, function(message) {
