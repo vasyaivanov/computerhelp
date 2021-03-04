@@ -321,12 +321,12 @@ connection.getSocket( function(socket){
   
   socket.on('open-sreenshare-in-room', function(message){
         console.log("JD: BBB RECEIVED MESSAGE OPEN-SCREENSHARE-IN-ROOM message="+JSON.stringify(message)+" socket.id="+socket.id + " localStorage="+localStorage.getItem(localStorageId));
-        // if(message == roomid) {
-        //   console.log("JD: ABOUT TO CLICK OPEN-ROOM document.getElementById('open-room')="+document.getElementById('open-room'));
-        //   connection.open(document.getElementById('room-id').value, function() {
-        //   showRoomURL(connection.sessionid);
-    // });
-    //     }
+        if(message == localStorage.getItem(localStorageId)) {
+          console.log("JD: ABOUT TO CLICK OPEN-ROOM document.getElementById('open-room')="+document.getElementById('open-room'));
+          connection.open(localStorage.getItem(localStorageId)+localStorageUniqueIdentified, function() {
+            showRoomURL(connection.sessionid);
+          });
+        }
   });
 
   socket.on('open-sreenshare', function(message){
