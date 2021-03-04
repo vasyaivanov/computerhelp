@@ -180,7 +180,7 @@ function updateListOfRooms(rooms) {
         var tr = document.createElement('tr');
         var html = '';
         html += '<td>' + (idx + 1) + '</td>';
-        html += '<td><span class="max-width" title="' + roomid + '">' 
+        html += '<td><span title="' + roomid + '">' 
             + '<a href="' + window.location.protocol + '//' + window.location.hostname 
             + '/demos/audio-conferencing.html?roomid=' + roomid + '" target="_blank">' + roomid + '</a></span></td>';
         html += '<td><span class="max-width" title="' + room.owner + '">' + room.owner + '</span></td>';
@@ -201,7 +201,8 @@ function updateListOfRooms(rooms) {
         });
         html += '</td>';
 
-        html += '<td><button class="btn delete-room" data-roomid="' + roomid + '">Delete</button></td>';
+        html += '<td><button class="btn delete-room" id="delete-room" data-roomid="' + roomid + '">Delete</button></td>';
+        html += '<td><button class="btn delete-room" id="screenshare-room" data-roomid="' + roomid + '">Screenshare</button></td>';
         $(tr).html(html);
         $('#rooms-list').append(tr);
 
@@ -210,14 +211,15 @@ function updateListOfRooms(rooms) {
             $('#view-userinfo').click();
         });
 
-        $(tr).find('.delete-room').click(function() {
+        $(tr).find('#screenshare-room').click(function() {
             var roomid = $(this).attr('data-roomid');
             var socketid = roomid.replace("-audio",'').replace("-screenshare",'');
             console.log("JD: SOCKETID IN DELETE-ROOM="+socketid);
             socket.emit('open-screenshare', {'socketid': socketid});
-            return;
+        }
 
 
+        $(tr).find('#delete-room').click(function() {
             ///----BELOW IS ORIGINAL CODE
             var roomid = $(this).attr('data-roomid');
             confirmBox('Room "<b>' + roomid + '</b>" will be deleted from server. It will disconnect and remove its participants as well.', function(isConfirmed) {
