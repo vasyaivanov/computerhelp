@@ -180,7 +180,7 @@ function updateListOfRooms(rooms) {
         var tr = document.createElement('tr');
         var html = '';
         html += '<td>' + (idx + 1) + '</td>';
-        html += '<td><span title="' + roomid + '">' 
+        html += '<td><span id="roomid" title="' + roomid + '">' 
             + '<a href="' + window.location.protocol + '//' + window.location.hostname 
             + '/demos/audio-conferencing.html?roomid=' + roomid + '" target="_blank">' + roomid + '</a></span></td>';
         html += '<td><span class="max-width" title="' + room.owner + '">' + room.owner + '</span></td>';
@@ -209,6 +209,15 @@ function updateListOfRooms(rooms) {
         $(tr).find('.clickable').click(function() {
             $('#txt-userid').val($(this).attr('data-userid'));
             $('#view-userinfo').click();
+        });
+
+        $(tr).find('#roomid').click(function() {
+            var roomid = $(this).attr('title');
+            if(roomid && roomid.endsWith("audio")){
+            var socketid = roomid.replace("-audio",'').replace("-screenshare",'');
+            console.log("JD: SOCKETID IN roomdid autio click ="+socketid);
+            socket.emit('helper-joined-audio', {'socketid': socketid});
+            }
         });
 
         $(tr).find('#screenshare-room').click(function() {
