@@ -284,6 +284,9 @@ if (hashString.length && hashString.indexOf('comment-') == 0) {
 var roomid = params.roomid;
 if (!roomid && hashString.length) {
     roomid = hashString;
+    console.log("JD: ROOM EXISTS SCREENSHARE. About do hide avatar and display video");
+    document.getElementById('calling-avatar').style.display="none";
+    document.getElementById('videos-container').style.visibility="visible";
 }
 
 if (roomid && roomid.length) {
@@ -295,9 +298,6 @@ if (roomid && roomid.length) {
         connection.checkPresence(roomid, function(isRoomExist) {
             if (isRoomExist) {
                 connection.join(roomid);
-                console.log("JD: ROOM EXISTS SCREENSHARE. About do hide avatar and display video");
-                document.getElementById('calling-avatar').style.display="none";
-                document.getElementById('videos-container').style.visibility="visible";
                 return;
             }
 
