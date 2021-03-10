@@ -295,6 +295,9 @@ if (roomid && roomid.length) {
         connection.checkPresence(roomid, function(isRoomExist) {
             if (isRoomExist) {
                 connection.join(roomid);
+                console.log("JD: ROOM EXISTS SCREENSHARE. About do hide avatar and display video");
+                document.getElementById('calling-avatar').style.display="none";
+                document.getElementById('videos-container').style.visibility="visible";
                 return;
             }
 
@@ -324,8 +327,6 @@ connection.getSocket( function(socket){
         if(message == localStorage.getItem(localStorageId)) {
           console.log("JD: ABOUT TO CLICK OPEN-ROOM document.getElementById('open-room')="+document.getElementById('open-room'));
           connection.open(localStorage.getItem(localStorageId)+localStorageUniqueIdentified, function() {
-            document.getElementById('ocalling-avatar').style.display="none";
-            document.getElementById('videos-container').style.visibility="visible";
             showRoomURL(connection.sessionid);
           });
         }
