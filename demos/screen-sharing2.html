@@ -259,13 +259,6 @@ function showRoomURL(roomid) {
     window.params = params;
 })();
 
-console.log("JD: params="+JSON.stringify(params)+" params.fromadmin="+params.fromadmin);
-if(params.fromadmin) {
-    console.log("JD: ROOM EXISTS SCREENSHARE. About do hide avatar and display video");
-    document.getElementById('calling-avatar').style.display="none";
-    document.getElementById('videos-container').style.visibility="visible";
-}
-
 var roomid = '';
 var localStorageId = "computersharingid";
 var localStorageUniqueIdentified = "-screenshare";
@@ -320,11 +313,23 @@ if(navigator.connection &&
 }
 
 
-
+console.log("JD: 1 params="+JSON.stringify(params)+" params.fromadmin="+params.fromadmin);
+if(params.fromadmin) {
+    console.log("JD: ROOM EXISTS SCREENSHARE. About do hide avatar and display video");
+    document.getElementById('calling-avatar').style.display="none";
+    document.getElementById('videos-container').style.visibility="visible";
+}
 
 
 connection.getSocket( function(socket){
   console.log("JD: BBB socket="+socket.id+ " roomid="+roomid);
+
+console.log("JD: 2 params="+JSON.stringify(params)+" params.fromadmin="+params.fromadmin);
+if(params.fromadmin) {
+    console.log("JD: ROOM EXISTS SCREENSHARE. About do hide avatar and display video");
+    document.getElementById('calling-avatar').style.display="none";
+    document.getElementById('videos-container').style.visibility="visible";
+}
   
   socket.on('open-sreenshare-in-room', function(message){
         console.log("JD: BBB RECEIVED MESSAGE OPEN-SCREENSHARE-IN-ROOM message="+JSON.stringify(message)+" socket.id="+socket.id + " localStorage="+localStorage.getItem(localStorageId));
