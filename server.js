@@ -292,14 +292,6 @@ ioServer(httpApp).on('connection', function(socket) {
         socket.broadcast.emit('open-sreenshare-in-room',message.socketid);
     });
 
-    socket.on('helper-joined-audio', function(message){
-        console.log("JD: RECEIVED MESSAGE helper-joined-audio:"+JSON.stringify(message)+" "+message.socketid);
-        // ioServer(httpApp).to(message.socketid).emit('open-sreenshare-in-room',message.socketid);
-        socket.broadcast.emit('helper-joined-audio-open',message.socketid);
-    });
-
-    
-
     socket.on(params.socketCustomEvent, function(message) {
         socket.broadcast.emit(params.socketCustomEvent, message);
     });
