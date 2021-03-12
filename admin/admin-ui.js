@@ -53,7 +53,10 @@ function connectSocket(username, password) {
                 });
                 return;
             }
-            $('.new-updates-notifier').show();
+            socket.emit('admin', {
+                all: true
+            });
+            //$('.new-updates-notifier').show();
         } else {
             updateListOfRooms(message.listOfRooms || []);
             // updateListOfUsers(message.listOfUsers || []);
