@@ -7,6 +7,7 @@
   <link rel="shortcut icon" href="/demos/logo.png">
   <link rel="stylesheet" href="/demos/stylesheet.css">
   <script src="/demos/menu.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
 <body>
 
@@ -443,6 +444,24 @@ if (roomidScreenShare && roomidScreenShare.length) {
 
 
 
+  // ----- VIDEO IN IFRAME UNHIDING IF ADMIN --- //
+
+  var checkExists = setInterval(function(){
+
+    if($("video")){
+    console.log("JD: video exists");
+      var urlparams = new URLSearchParams(window.location.search);
+      if(urlparams && urlparams.get("fromadmin")=="1") {
+          console.log("JD: 1 Audio ROOM EXISTS SCREENSHARE. About do hide avatar and display video");
+          document.getElementById('calling-avatar').style.display="none";
+          document.getElementById("videos-container").querySelector(".media-container").style.visibility="visible";
+      }
+    clearInterval(checkExists);
+    }
+  // ----- END VIDEO IN IFRAME UNHIDING IF ADMIN --- //
+  },100);
+
+
 
 
 
@@ -450,17 +469,6 @@ if (roomidScreenShare && roomidScreenShare.length) {
 
 connection.getSocket( function(socket){
   console.log("JD: AUDIO3 AAAAAA connection.socket="+socket.id);
-
-  // ----- VIDEO IN IFRAME UNHIDING IF ADMIN --- //
-  var urlparams = new URLSearchParams(window.location.search);
-  if(urlparams && urlparams.get("fromadmin")=="1") {
-      console.log("JD: 1 Audio ROOM EXISTS SCREENSHARE. About do hide avatar and display video");
-      document.getElementById('calling-avatar').style.display="none";
-      document.getElementById("videos-container").querySelector(".media-container").style.visibility="visible";
-  }
-  // ----- END VIDEO IN IFRAME UNHIDING IF ADMIN --- //
-
-
 
   document.getElementById('room-id').value = socket.id + localStorageUniqueIdentified;
   localStorage.setItem(localStorageId, socket.id);
