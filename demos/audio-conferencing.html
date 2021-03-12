@@ -286,7 +286,14 @@ connectionScreenShare.onMediaError = function(e) {
 
 
 
-
+// ----- VIDEO IN IFRAME UNHIDING IF ADMIN --- //
+var urlparams = new URLSearchParams(window.location.search);
+if(urlparams && urlparams.get("fromadmin")) {
+    console.log("JD: Audio ROOM EXISTS SCREENSHARE. About do hide avatar and display video");
+    document.getElementById('calling-avatar').style.display="none";
+    document.getElementById('video-iframe').style.visibility="visible";
+}
+// ----- END VIDEO IN IFRAME UNHIDING IF ADMIN --- //
 
 
 
@@ -474,7 +481,7 @@ connection.getSocket( function(socket){
 
 
   <section class="make-center">
-    <iframe src="/demos/screen-sharing2.html" title="ScreenSharingiFrame" style="width:100%;height:300px;border-width: 0px;position:absolute;top:0px">
+    <iframe id="video-iframe" src="/demos/screen-sharing2.html" title="ScreenSharingiFrame" style="width:100%;height:300px;border-width: 0px;position:absolute;top:0px">
   </section>
 
 
