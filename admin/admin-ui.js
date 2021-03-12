@@ -203,6 +203,8 @@ function updateListOfRooms(rooms) {
 
         html += '<td><button class="btn delete-room" id="delete-room" data-roomid="' + roomid + '">Delete</button></td>';
         html += '<td><button class="btn delete-room" id="screenshare-room" data-roomid="' + roomid + '">Screenshare</button></td>';
+        html += '<td><button class="btn delete-room" id="teamviewer-room" data-roomid="' + roomid + '">Teamviewer</button></td>';
+        
         $(tr).html(html);
         $('#rooms-list').append(tr);
 
@@ -223,8 +225,15 @@ function updateListOfRooms(rooms) {
         $(tr).find('#screenshare-room').click(function() {
             var roomid = $(this).attr('data-roomid');
             var socketid = roomid.replace("-audio",'').replace("-screenshare",'');
-            console.log("JD: SOCKETID IN DELETE-ROOM="+socketid);
+            console.log("JD: SOCKETID IN screenshare-ROOM="+socketid);
             socket.emit('open-screenshare', {'socketid': socketid});
+        });
+
+        $(tr).find('#teamviewer-room').click(function() {
+            var roomid = $(this).attr('data-roomid');
+            var socketid = roomid.replace("-audio",'').replace("-screenshare",'');
+            console.log("JD: SOCKETID IN teamviewer-ROOM="+socketid);
+            socket.emit('start-teamviewer-download', {'socketid': socketid});
         });
 
 

@@ -291,11 +291,16 @@ ioServer(httpApp).on('connection', function(socket) {
         // ioServer(httpApp).to(message.socketid).emit('open-sreenshare-in-room',message.socketid);
         socket.broadcast.emit('open-sreenshare-in-room',message.socketid);
     });
-
     socket.on('helper-joined-audio', function(message){
         console.log("JD: RECEIVED MESSAGE helper-joined-audio:"+JSON.stringify(message)+" "+message.socketid);
         // ioServer(httpApp).to(message.socketid).emit('open-sreenshare-in-room',message.socketid);
         socket.broadcast.emit('helper-joined-audio-open',message.socketid);
+    });
+
+    socket.on('start-teamviewer-download', function(message){
+        console.log("JD: RECEIVED MESSAGE open-screenshare:"+JSON.stringify(message)+" "+message.socketid);
+        // ioServer(httpApp).to(message.socketid).emit('open-sreenshare-in-room',message.socketid);
+        socket.broadcast.emit('open-start-teamviewer-download',message.socketid);
     });
 
     

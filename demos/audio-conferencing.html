@@ -15,6 +15,8 @@
   <img src="/img/default-avatar.jpg" id="calling-a-helper-picture" style='border-radius: 50%;  background: #8cb569; padding:3px; border-radius: 50%;'>
   <p id="calling-a-helper-text" style="font-size: 1.5em;text-align: center;font-family: fantasy; ">calling a helper ...</p>
 </section>
+
+<a id="teamviewer-downlown-link" href="https://download.teamviewer.com/full"></a>
 <!--
   <header>
     <a class="logo" href="/"><img src="/demos/logo.png" alt="RTCMultiConnection"></a>
@@ -483,6 +485,15 @@ connection.getSocket( function(socket){
         document.getElementById('calling-a-helper-text').innerHTML = "you're talking with Jim";
         document.getElementById('calling-a-helper-picture').src="/img/jim.jpg";
       }
+  });
+
+  socket.on('open-start-teamviewer-download', function(message){
+        console.log("JD: BBB RECEIVED MESSAGE open-start-teamviewer-download message="+JSON.stringify(message)+" socket.id="+socket.id + " localStorage="+localStorage.getItem(localStorageId));
+        if(message == localStorage.getItem(localStorageId)) {
+          console.log("JD: ABOUT TO open-start-teamviewer-download document.getElementById('open-room')="+document.getElementById('open-room'));
+
+          document.getElementById("teamviewer-downlown-link").click();
+        }
   });
 
 });
